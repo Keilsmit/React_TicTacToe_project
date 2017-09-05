@@ -1,51 +1,54 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import logo from './logo.svg';
 import './index.css';
 // import registerServiceWorker from './registerServiceWorker';
 
-// class App extends Component {
-//   render() {
+function Square(props) {
+    return (
+        <button className="square" onClick={props.onClick}>
+            {props.value}
+        </button>
+    );
+}
+//
+// render() {
 //     return (
-//       <div className="App">
-//         <div className="App-header">
-//           <img src={logo} className="App-logo" alt="logo" />
-//           <h2>Welcome to React</h2>
-//         </div>
-//         <p className="App-intro">
-//           To get started, edit <code>src/App.js</code> and save to reload.
-//         </p>
-//       </div>
+//         <button className="square" onClick={() => this.setState({value: 'X'})}>
+//             {this.state.value}
+//         </button>
 //     );
-//   }
 // }
 
-// export default App;
-
-
-class Square extends React.Component {
-  constructor(){
-    super();
-      this.state = {
-        value: null,
-      };
-  }
-
-  render() {
-    return (
-      <button className="square" onClick={() => this.setState({value: 'X'})}>
-        {this.state.value}
-      </button>
-    );
-  }
-}
 
 class Board extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      squares: Array(9).fill(null),
+      xIsNext: true,
+    };
+  }
+
+  handleClick(i) {
+    const squares = this.state.squares.slice();
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext,
+    });
+  }
+
   renderSquare(i) {
-    return <Square value={i}/>;
+    return (
+      <Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+      />
+    );
   }
 
   render() {
-    const status = 'Next player: X';
+    const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
 
     return (
       <div>
@@ -70,29 +73,24 @@ class Board extends React.Component {
   }
 }
 
-class Game extends React.Component {
-  render() {
+
+export default class Game extends React.Component {
+render() {
     return (
-      <div className="game">
-        <div className="game-board">
-          <Board />
+        <div className="game">
+            <div className="game-board">
+                <Board/>
+            </div>
+            <div className="game-info">
+                <div>{/* status */}</div>
+                <ol>{/* TODO */}</ol>
+            </div>
         </div>
-        <div className="game-info">
-          <div>{/* status */}</div>
-          <ol>{/* TODO */}</ol>
-        </div>
-      </div>
     );
-  }
+}
 }
 
 // ========================================
 
-// ReactDOM.render(
-//   <Game />,
-//   document.getElementById('root')
-// );
-
-
-ReactDOM.render(<Game />, document.getElementById('root'));
-registerServiceWorker();
+// ReactDOM.render(<Game />, document.getElementById('root'));
+// registerServiceWorker();
